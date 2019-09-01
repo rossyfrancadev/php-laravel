@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Request;
 
-    class ProdutoController extends Controller {
+class ProdutoController extends Controller
+{
 
-        public function lista(){
-                $html = '<h1>Listagem de produtos</h1>';
-            $produtos =  DB::select('select * from tb_product');
-        foreach($produtos as $p){
-        $html.= "<br/> Nome: " . $p->nome;
-        }
-           return $html;
-        }
+    public function lista()
+    {
+        $produtos = DB::select('select * from tb_product');
+    
+        return view('listagemProdutos')->with('produtos', $produtos);
+    }
+
+    public function detalhe()
+    {
+        $id = Request::route('id');
+
+        $produto = DB::select('select * from tb_product where id = ?', [$id]);
+        return view('detalhes')->with('p', $produto[0]);
+    }
 }
